@@ -19,6 +19,6 @@ query 日志记录查询
 
 #### 项目进度
 
-完成auth
+完成auth, billstd
 
-正在billstd
+正在card
