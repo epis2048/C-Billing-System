@@ -37,6 +37,19 @@ billStdList* billstd_do_addBillStd(billStdList* head_billStdList, char stdName[5
 	return head_billStdList;
 }
 
+billStdList* billstd_do_delBillStd(billStdList* head_billStdList, int delID, int nowAdminID)
+{
+	billStdList* p = head_billStdList;
+	while (1) {
+		if (p == NULL) break;
+		if (p->id == delID) {
+			p->isDel = true;
+		}
+		p = p->next;
+	}
+	return head_billStdList;
+}
+
 billStdList* billstd_addBillStd(billStdList* head_billStdList, int* billStdMaxID, int nowAdminID)
 {
 	system("cls");
@@ -48,13 +61,88 @@ billStdList* billstd_addBillStd(billStdList* head_billStdList, int* billStdMaxID
 	cout << "添加计费标准" << endl;
 	cout << "计费标准名称：";
 	cin >> billStdName;
-	cout << "计费标准(一毛钱一秒格式：0.1/s、计费单位s,m,h）：";
+	cout << "计费标准(花费/单位、计费单位s,m,h）：";
 	sb = scanf("%f/%c", &stdUnitCostInput, &stdUnit);
 	stdUnitCostInput *= 100;
 	stdUnitCost = (int)stdUnitCostInput;
 	head_billStdList = billstd_do_addBillStd(head_billStdList, billStdName, stdUnit, stdUnitCost, billStdMaxID, nowAdminID);
 	system("cls");
 	cout << "添加成功！" << endl;
+	return head_billStdList;
+}
+
+billStdList* billstd_delBillStd(billStdList* head_billStdList, int nowAdminID)
+{
+	int c;
+	cout << "请输入要删除的ID：";
+	cin >> c;
+	head_billStdList = billstd_do_delBillStd(head_billStdList, c, nowAdminID);
+	system("cls");
+	return head_billStdList;
+}
+
+billStdList* billstd_editBillStd(billStdList* head_billStdList, int nowAdminID)
+{
+	int c;
+	int d;
+	cout << "请输入要编辑的ID：";
+	cin >> c;
+	bool hasFound = false;
+	char newName[50];
+	char newUnit;
+	int newUnitCost;
+	float newUnitCostInput;
+	int sb;//VS非要返回值
+	billStdList* p = head_billStdList;
+	while (1) {
+		if (p == NULL) break;
+		if (p->id == c) {
+			hasFound = true;
+			break;
+		}
+		p = p->next;
+	}
+	if (hasFound) {
+		while (1) {
+			system("cls");
+			cout << "标准ID：" << p->id << endl;
+			cout << "1. 标准名称：" << p->stdName << endl;
+			cout << "2. 标准：" << (p->stdUnitCost)*1.0/100 << "/" << p->stdUnit << endl;
+			cout << "0. 退出" << endl;
+			cout << "请输入编号：";
+			cin >> d;
+			switch (d)
+			{
+			case 1:
+				cout << "请输入新名称：";
+				cin >> newName;
+				strcpy(p->stdName, newName);
+				break;
+			case 2:
+				cout << "请输入新的计费标准(花费/单位、计费单位s,m,h）：";
+				sb = scanf("%f/%c", &newUnitCostInput, &newUnit);
+				newUnitCostInput *= 100;
+				newUnitCost = (int)newUnitCostInput;
+				p->stdUnit = newUnit;
+				p->stdUnitCost = newUnitCost;
+				break;
+			case 0:
+				break;
+			default:
+				cout << "选择错误！" << endl;
+				system("pause");
+				break;
+			}
+			if (d == 0) {
+				break;
+			}
+		}
+	}
+	else {
+		cout << "没有找到要编辑的标准！";
+		system("pause");
+	}
+	system("cls");
 	return head_billStdList;
 }
 
@@ -70,6 +158,10 @@ billStdList* billstd_showMainMenu(billStdList* head_billStdList, int* billStdMax
 		billStdList* p = head_billStdList;
 		while (1) {
 			if (p == NULL) break;
+			if (p->isDel == true) {
+				p = p->next;
+				continue;
+			}
 			ttime = localtime(&p->stdCreateTime);
 			strftime(bl_s_ct, sizeof(bl_s_ct), "%Y年%m月%d日 %H:%M:%S", ttime);
 			cout << setw(6) << p->id << setw(12) << p->stdName << setw(26) << bl_s_ct << setw(6) << p->stdUnitCost*1.0/100 << "/" << p->stdUnit << endl;
@@ -87,8 +179,10 @@ billStdList* billstd_showMainMenu(billStdList* head_billStdList, int* billStdMax
 			head_billStdList = billstd_addBillStd(head_billStdList, billStdMaxID, nowAdminID);
 			break;
 		case 2:
+			head_billStdList = billstd_editBillStd(head_billStdList, nowAdminID);
 			break;
 		case 3:
+			head_billStdList = billstd_delBillStd(head_billStdList, nowAdminID);
 			break;
 		case 0:
 			break;
