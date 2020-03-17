@@ -152,12 +152,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="auth.cpp" />
+    <ClCompile Include="bill.cpp" />
+    <ClCompile Include="billstd.cpp" />
+    <ClCompile Include="card.cpp" />
+    <ClCompile Include="charge.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="query.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="auth.h" />
+    <ClInclude Include="bill.h" />
+    <ClInclude Include="billstd.h" />
+    <ClInclude Include="card.h" />
+    <ClInclude Include="charge.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="query.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

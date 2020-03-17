@@ -31,12 +31,12 @@ int auth_login(adminList* head_adminList);
 int auth_checkHasAuth(adminList* head_adminList, int nowAdminID, int authID);
 
 //显示权限管理主菜单
-adminList* auth_showMainMenu(adminList* head_adminList, int nowAdminID);
+adminList* auth_showMainMenu(adminList* head_adminList, int* adminMaxID, int nowAdminID);
 //查询管理员
 int auth_queryAdminDetail(adminList* head_adminList);
 //添加管理员
-adminList* auth_do_addAdmin(adminList* head_adminList, char username[20], char realname[100], char password[50], int isSuperAdmin, int nowAdminID);
-adminList* auth_addAdmin(adminList* head_adminList,  int nowAdminID);
+adminList* auth_do_addAdmin(adminList* head_adminList, char username[20], char realname[100], char password[50], int isSuperAdmin, int* adminMaxID, int nowAdminID);
+adminList* auth_addAdmin(adminList* head_adminList, int* adminMaxID, int nowAdminID);
 //编辑管理员
 adminList* auth_editAdmin(adminList* head_adminList, int nowAdminID);
 //删除管理员

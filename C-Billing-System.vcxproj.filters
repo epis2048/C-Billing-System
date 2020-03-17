@@ -24,12 +24,42 @@
     <ClCompile Include="menu.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="billstd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bill.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="card.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="charge.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="query.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="auth.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="menu.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="billstd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="bill.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="card.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="charge.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="query.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

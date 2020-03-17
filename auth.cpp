@@ -6,8 +6,6 @@
 #include "auth.h"
 using namespace std;
 
-int adminMaxID = 0;
-
 int auth_checkStatus(adminList* head_adminList, int nowAdminID) {
 	if (nowAdminID > 0) return 1;
 	else return 0;
@@ -65,7 +63,7 @@ int auth_login(adminList* head_adminList)
 	return nowAdminID;
 }
 
-adminList* auth_do_addAdmin(adminList* head_adminList, char username[20], char realname[100], char password[50], int isSuperAdmin, int nowAdminID)
+adminList* auth_do_addAdmin(adminList* head_adminList, char username[20], char realname[100], char password[50], int isSuperAdmin, int* adminMaxID, int nowAdminID)
 {
 	adminList* p;
 	adminList* q;
@@ -76,12 +74,12 @@ adminList* auth_do_addAdmin(adminList* head_adminList, char username[20], char r
 		return head_adminList;
 	}
 	//初始化数据
-	adminMaxID++;
+	(*adminMaxID)++;
 	std::time_t t = std::time(0);
 	strcpy(p->username, username);
 	strcpy(p->realname, realname);
 	strcpy(p->password, password);
-	p->id = adminMaxID;
+	p->id = *adminMaxID;
 	p->createTime = t;
 	//我也不知道为什么定义里面的初值没管用。。
 	p->authList[0] = 0;
@@ -134,7 +132,7 @@ adminList* auth_do_delAdmin(adminList* head_adminList, int delID, int nowAdminID
 	return head_adminList;
 }
 
-adminList* auth_addAdmin(adminList* head_adminList, int nowAdminID)
+adminList* auth_addAdmin(adminList* head_adminList, int* adminMaxID, int nowAdminID)
 {
 	char username[20];
 	char realname[100];
@@ -175,7 +173,7 @@ adminList* auth_addAdmin(adminList* head_adminList, int nowAdminID)
 	//cin >> password;
 	cout << "是否超级管理员（是为1，否为0）：";
 	cin >> isSuperAdmin;
-	head_adminList = auth_do_addAdmin(head_adminList, username, realname, password, isSuperAdmin, nowAdminID);
+	head_adminList = auth_do_addAdmin(head_adminList, username, realname, password, isSuperAdmin, adminMaxID, nowAdminID);
 	system("cls");
 	return head_adminList;
 }
@@ -348,7 +346,7 @@ int auth_queryAdminDetail(adminList* head_adminList)
 	return 0;
 }
 
-adminList* auth_showMainMenu(adminList* head_adminList, int nowAdminID){
+adminList* auth_showMainMenu(adminList* head_adminList, int* adminMaxID, int nowAdminID){
 	int c = 0;
 	system("cls");
 	while (1) {
@@ -376,7 +374,7 @@ adminList* auth_showMainMenu(adminList* head_adminList, int nowAdminID){
 			auth_queryAdminDetail(head_adminList);
 			break;
 		case 2:
-			head_adminList = auth_addAdmin(head_adminList, nowAdminID);
+			head_adminList = auth_addAdmin(head_adminList, adminMaxID, nowAdminID);
 			break;
 		case 3:
 			head_adminList = auth_editAdmin(head_adminList, nowAdminID);
