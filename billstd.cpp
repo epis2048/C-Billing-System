@@ -61,8 +61,13 @@ billStdList* billstd_addBillStd(billStdList* head_billStdList, int* billStdMaxID
 	cout << "添加计费标准" << endl;
 	cout << "计费标准名称：";
 	cin >> billStdName;
-	cout << "计费标准(花费/单位、计费单位s,m,h）：";
+	inbstd2:cout << "计费标准(花费/单位、计费单位s,m,h）：";
 	sb = scanf("%f/%c", &stdUnitCostInput, &stdUnit);
+	if (!(stdUnit == 'h' || stdUnit == 'm' || stdUnit == 's')) {
+		cout << "单位无效！" << endl;
+		goto inbstd2;
+	}
+
 	stdUnitCostInput *= 100;
 	stdUnitCost = (int)stdUnitCostInput;
 	head_billStdList = billstd_do_addBillStd(head_billStdList, billStdName, stdUnit, stdUnitCost, billStdMaxID, nowAdminID);
@@ -119,8 +124,12 @@ billStdList* billstd_editBillStd(billStdList* head_billStdList, int nowAdminID)
 				strcpy(p->stdName, newName);
 				break;
 			case 2:
-				cout << "请输入新的计费标准(花费/单位、计费单位s,m,h）：";
+				inbstd:cout << "请输入新的计费标准(花费/单位、计费单位s,m,h）：";
 				sb = scanf("%f/%c", &newUnitCostInput, &newUnit);
+				if (!(newUnit == 'h' || newUnit == 'm' || newUnit == 's')) {
+					cout << "单位无效！" << endl;
+					goto inbstd;
+				}
 				newUnitCostInput *= 100;
 				newUnitCost = (int)newUnitCostInput;
 				p->stdUnit = newUnit;

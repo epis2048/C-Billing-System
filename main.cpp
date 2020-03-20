@@ -4,9 +4,9 @@ using namespace std;
 
 #include "menu.h"
 #include "auth.h"
-#include "bill.h"
 #include "billstd.h"
 #include "card.h"
+#include "bill.h"
 #include "charge.h"
 #include "query.h"
 
@@ -17,11 +17,13 @@ int main()
 	*/
 	adminList* head_adminList = NULL;
 	billStdList* head_billStdList = NULL;
+	cardList* end_cardList = NULL;
 	//初始化当前管理账户变量
 	int nowAdminID = 0;
 	//初始化各种MaxID，用于自增
 	int adminMaxID = 0;
 	int billStdMaxID = 0;
+	int cardMaxID = 0;
 	//初始化admin/123456的用户
 	char in_al_un[20] = "admin";
 	char in_al_rn[1000] = "Admin";
@@ -45,6 +47,8 @@ int main()
 			case 4:
 				break;
 			case 5:
+				if (auth_checkHasAuth(head_adminList, nowAdminID, 3)) end_cardList = card_showMainMenu(end_cardList, head_billStdList, head_adminList, &cardMaxID, nowAdminID);
+				system("cls");
 				break;
 			case 6:
 				if (auth_checkHasAuth(head_adminList, nowAdminID, 4)) head_billStdList = billstd_showMainMenu(head_billStdList, &billStdMaxID, nowAdminID);

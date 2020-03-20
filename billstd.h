@@ -21,3 +21,5 @@ billStdList* billstd_editBillStd(billStdList* head_billStdList, int nowAdminID);
 //删除计费标准
 billStdList* billstd_do_delBillStd(billStdList* head_billStdList, int delID, int nowAdminID);
 billStdList* billstd_delBillStd(billStdList* head_billStdList, int nowAdminID);
+//API相关
+bool billstd_query_isValid(billStdList* head_billStdList, int stdID);//查询计费标准是否有效

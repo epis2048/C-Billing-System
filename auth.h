@@ -1,5 +1,6 @@
 #pragma once
 #include <ctime>
+using namespace std;
 
 typedef struct admin{
 	int id;
@@ -42,5 +43,5 @@ adminList* auth_editAdmin(adminList* head_adminList, int nowAdminID);
 //删除管理员
 adminList* auth_do_delAdmin(adminList* head_adminList, int delID, int nowAdminID);
 adminList* auth_delAdmin(adminList* head_adminList, int nowAdminID);
-
-
+//API相关
+string auth_query_getRealnameByID(adminList* head_adminList, int adminID);
