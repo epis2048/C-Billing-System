@@ -12,13 +12,18 @@ card 卡管理
 
 charge 充值退费管理
 
+main 主函数
+
 menu 主菜单
 
 query 日志记录查询
 
-
 #### 项目进度
 
-完成auth, billstd
+完成 main, menu, auth, billstd, card
 
-正在card
+正在 charge
+
+#### 远期
+
+使用文件存储信息
