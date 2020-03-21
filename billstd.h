@@ -1,5 +1,6 @@
 #pragma once
 #include <ctime>
+using namespace std;
 
 typedef struct billstd {
 	int id;//ID，实现自增
@@ -23,3 +24,6 @@ billStdList* billstd_do_delBillStd(billStdList* head_billStdList, int delID, int
 billStdList* billstd_delBillStd(billStdList* head_billStdList, int nowAdminID);
 //API相关
 bool billstd_query_isValid(billStdList* head_billStdList, int stdID);//查询计费标准是否有效
+string billstd_query_nameAndStd(billStdList* head_billStdList, int stdID);//查询计费标准名称及内容
+//零散功能
+string intTranStr(double integer);

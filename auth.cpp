@@ -424,3 +424,18 @@ void inputPassword(char password[50], int size) {
 	password[count] = '\0';
 	cout << endl;
 }
+
+string auth_query_getRealnameByID(adminList* head_adminList, int adminID)
+{
+	string realname = "Î´ÕÒµ½";
+	adminList* p = head_adminList;
+	while (1) {
+		if (p == NULL) break;
+		if (p->id == adminID) {
+			realname = p->realname;
+			break;
+		}
+		p = p->next;
+	}
+	return realname;
+}

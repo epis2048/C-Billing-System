@@ -23,7 +23,7 @@ int main()
 	//初始化各种MaxID，用于自增
 	int adminMaxID = 0;
 	int billStdMaxID = 0;
-	int cardMaxID = 0;
+	int cardMaxID = 100000;
 	//初始化admin/123456的用户
 	char in_al_un[20] = "admin";
 	char in_al_rn[1000] = "Admin";
@@ -32,7 +32,9 @@ int main()
 	//初始化一条0.1/s的计费标准
 	char in_bsl_n[50] = "默认标准";
 	head_billStdList = billstd_do_addBillStd(head_billStdList, in_bsl_n, 's', 10, &billStdMaxID, nowAdminID);
-
+	/*
+	主程序开始
+	*/
 	int userChoose = 0;
 	while (1) {
 		if (auth_checkStatus(head_adminList, nowAdminID) != 0) {

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <conio.h>
+#include <sstream>
 #include "billstd.h"
 using namespace std;
 
@@ -22,6 +23,7 @@ billStdList* billstd_do_addBillStd(billStdList* head_billStdList, char stdName[5
 	p->stdCreateTime = t;
 	p->stdUnit = stdUnit;
 	p->stdUnitCost = stdUnitCost;
+	p->isDel = false;
 	p->next = NULL;
 	//链表里插数据
 	if (head_billStdList == NULL) {
@@ -61,7 +63,7 @@ billStdList* billstd_addBillStd(billStdList* head_billStdList, int* billStdMaxID
 	cout << "添加计费标准" << endl;
 	cout << "计费标准名称：";
 	cin >> billStdName;
-	inbstd2:cout << "计费标准(花费/单位、计费单位s,m,h）：";
+	inbstd2:cout << "计费标准(花费/单位、计费单位s,m,h）："; //这有一个标签
 	sb = scanf("%f/%c", &stdUnitCostInput, &stdUnit);
 	if (!(stdUnit == 'h' || stdUnit == 'm' || stdUnit == 's')) {
 		cout << "单位无效！" << endl;
@@ -124,7 +126,7 @@ billStdList* billstd_editBillStd(billStdList* head_billStdList, int nowAdminID)
 				strcpy(p->stdName, newName);
 				break;
 			case 2:
-				inbstd:cout << "请输入新的计费标准(花费/单位、计费单位s,m,h）：";
+				inbstd:cout << "请输入新的计费标准(花费/单位、计费单位s,m,h）："; //这有一个标签
 				sb = scanf("%f/%c", &newUnitCostInput, &newUnit);
 				if (!(newUnit == 'h' || newUnit == 'm' || newUnit == 's')) {
 					cout << "单位无效！" << endl;
@@ -206,4 +208,42 @@ billStdList* billstd_showMainMenu(billStdList* head_billStdList, int* billStdMax
 		}
 	}
 	return head_billStdList;
+}
+
+string billstd_query_nameAndStd(billStdList* head_billStdList, int stdID)
+{
+	string ret = "未找到该标准！";
+	billStdList* p = head_billStdList;
+	while (1) {
+		if (p == NULL) break;
+		if (p->id == stdID) {
+			ret = p->stdName;
+			ret = ret + ": ";
+			ret = ret + intTranStr(p->stdUnitCost*1.0/100) + '/' + p->stdUnit;
+			if (p->isDel) ret = ret + " (已失效)";
+			break;
+		}
+		p = p->next;
+	}
+	return ret;
+}
+
+bool billstd_query_isValid(billStdList* head_billStdList, int stdID)
+{
+	billStdList* p = head_billStdList;
+	bool isV = false;
+	while (1) {
+		if (p == NULL) break;
+		if (p->id == stdID && !p->isDel) {
+			isV = true;
+		}
+		p = p->next;
+	}
+	return isV;
+}
+
+string intTranStr(double integer) {
+	stringstream ss;
+	ss << integer;
+	return ss.str();
 }
