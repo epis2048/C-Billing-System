@@ -46,6 +46,23 @@ cardList* card_do_addCard(cardList* end_cardList, char password[50], int balance
 	return end_cardList;
 }
 
+cardList* card_do_delCard(cardList* end_cardList, int cid, int nowAdminID) {
+	bool hasFound = false;
+	cardList* p = end_cardList;
+	while (1) {
+		if (p == NULL) break;
+		if (p->id == cid) {
+			hasFound = true;
+			p->isDel = true;
+			break;
+		}
+		p = p->prev;
+	}
+	if (hasFound) cout << "注销成功！" << endl;
+	else cout << "未找到该卡！" << endl;
+	return end_cardList;
+}
+
 cardList* card_addCard(cardList* end_cardList, billStdList* head_billStdList, int* cardMaxID, int nowAdminID)
 {
 	system("cls");
@@ -117,6 +134,10 @@ cardList* card_queryCardList(cardList* end_cardList, billStdList* head_billStdLi
 	cout << setw(6) << "卡号" << setw(6) << "余额" << setw(26) << "计费标准" << setw(26) << "最近使用时间" << endl;
 	while (1) {
 		if (p == NULL) break;
+		if (p->isDel) { 
+			p = p->prev;
+			continue; 
+		}
 		if(p->recentBillTime < 0){
 			strcpy(c_s_t, "暂无记录");
 		}
@@ -206,7 +227,7 @@ cardList* card_editCard(cardList* end_cardList, billStdList* head_billStdList, i
 	cin >> cid;
 	while (1) {
 		if (p == NULL) break;
-		if (p->id == cid) {
+		if (p->id == cid && !p->isDel) {
 			hasFound = true;
 			break;
 		}
@@ -262,9 +283,21 @@ cardList* card_editCard(cardList* end_cardList, billStdList* head_billStdList, i
 		}
 	}
 	else {
-		cout << "未找到卡!" << endl;
+		cout << "未找到卡或卡已被注销!" << endl;
 		system("pause");
 	}
+	system("cls");
+	return end_cardList;
+}
+
+cardList* card_delCard(cardList* end_cardList, int nowAdminID)
+{
+	int cid;
+	system("cls");
+	cout << "请输入要注销的卡号：";
+	cin >> cid;
+	end_cardList = card_do_delCard(end_cardList, cid, nowAdminID);
+	system("pause");
 	system("cls");
 	return end_cardList;
 }
@@ -288,6 +321,7 @@ cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdLis
 			end_cardList = card_addCard(end_cardList, head_billStdList, cardMaxID, nowAdminID);
 			break;
 		case 2:
+			end_cardList = card_delCard(end_cardList, nowAdminID);
 			break;
 		case 3:
 			end_cardList = card_queryCardList(end_cardList, head_billStdList, head_adminList, nowAdminID);

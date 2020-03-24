@@ -3,6 +3,8 @@
 typedef struct bill {
 	int id;//ID，实现自增
 	int stdID;//计费标准ID
+	char stdUnit;//计费单位(秒：s、分：m、时：h)
+	int stdUnitCost;//每单位多少钱, 单位是分，1元是100
 	int cardID;//卡号
 	int cost;//花费了多少钱，单位是分，一元100
 	int upAdminID;//上机管理员ID

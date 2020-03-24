@@ -9,26 +9,34 @@ using namespace std;
 #include "bill.h"
 #include "charge.h"
 #include "query.h"
+#include "service.h"
 
 int main()
 {
-	/*
-	初始化，先用链表，后期读取配置文件
-	*/
-	adminList* head_adminList = NULL;
-	billStdList* head_billStdList = NULL;
-	cardList* end_cardList = NULL;
 	//初始化当前管理账户变量
 	int nowAdminID = 0;
 	//初始化各种MaxID，用于自增
 	int adminMaxID = 0;
 	int billStdMaxID = 0;
 	int cardMaxID = 100000;
+	/*
+	初始化，逐步改为读取配置文件
+	*/
+	
+	billStdList* head_billStdList = NULL;
+	cardList* end_cardList = NULL;
+	billList* end_billList = NULL;
+	billUnfinishedList* head_billUnfinishedList = NULL;
+	chargeList* end_chargeList = NULL;
+	/*
+	读取配置文件
+	*/
+	adminList* head_adminList = read_auth_adminList(&adminMaxID);
 	//初始化admin/123456的用户
 	char in_al_un[20] = "admin";
 	char in_al_rn[1000] = "Admin";
 	char in_al_pw[50] = "asdfghjkl;'";
-	head_adminList = auth_do_addAdmin(head_adminList, in_al_un, in_al_rn, in_al_pw, 1, &adminMaxID, 0);
+	//head_adminList = auth_do_addAdmin(head_adminList, in_al_un, in_al_rn, in_al_pw, 1, &adminMaxID, 0);
 	//初始化一条0.1/s的计费标准
 	char in_bsl_n[50] = "默认标准";
 	head_billStdList = billstd_do_addBillStd(head_billStdList, in_bsl_n, 's', 10, &billStdMaxID, nowAdminID);
@@ -63,6 +71,8 @@ int main()
 				system("cls");
 				break;
 			case 9:
+				save_showMainMenu(head_adminList, head_billStdList, end_cardList, end_billList, head_billUnfinishedList, end_chargeList);
+				system("cls");
 				break;
 			case 0:
 				break;

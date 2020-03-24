@@ -30,3 +30,5 @@ cardList* card_queryCardDetail(cardList* end_cardList, billStdList* head_billStd
 //±à¼­¿¨
 cardList* card_editCard(cardList* end_cardList, billStdList* head_billStdList, int nowAdminID);
 //×¢Ïú¿¨
+cardList* card_do_delCard(cardList* end_cardList, int cid, int nowAdminID);
+cardList* card_delCard(cardList* end_cardList, int nowAdminID);

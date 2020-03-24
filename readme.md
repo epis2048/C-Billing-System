@@ -18,12 +18,10 @@ menu 主菜单
 
 query 日志记录查询
 
+service 文件保存相关
+
 #### 项目进度
 
 完成 main, menu, auth, billstd, card
 
-正在 charge
-
-#### 远期
-
-使用文件存储信息
+正在 权限信息和计费标准信息的文件存储

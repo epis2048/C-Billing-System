@@ -91,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_DEPRECATE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>6031;6054</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +160,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="query.cpp" />
+    <ClCompile Include="service.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="auth.h" />
@@ -168,6 +170,7 @@
     <ClInclude Include="charge.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="query.h" />
+    <ClInclude Include="service.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />
