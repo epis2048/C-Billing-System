@@ -22,6 +22,10 @@ service 文件保存相关
 
 #### 项目进度
 
-完成 main, menu, auth, billstd, card
+完成 
 
-正在 权限信息和计费标准信息的文件存储
+ - 界面 main, menu, auth, billstd, card
+
+ - 存储 auth, billstd, card
+
+正在 charge

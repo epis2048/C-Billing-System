@@ -13,18 +13,18 @@ using namespace std;
 
 int main()
 {
+	cout << "欢迎使用计费管理系统！" << endl << "系统正在初始化..." << endl;
 	//初始化当前管理账户变量
 	int nowAdminID = 0;
-	//初始化各种MaxID，用于自增
+	/*
+	初始化各种MaxID，用于自增，读取配置文件的时候也会修改这些ID
+	*/
 	int adminMaxID = 0;
 	int billStdMaxID = 0;
-	int cardMaxID = 100000;
+	int cardMaxID = 0;
 	/*
 	初始化，逐步改为读取配置文件
 	*/
-	
-	billStdList* head_billStdList = NULL;
-	cardList* end_cardList = NULL;
 	billList* end_billList = NULL;
 	billUnfinishedList* head_billUnfinishedList = NULL;
 	chargeList* end_chargeList = NULL;
@@ -32,17 +32,18 @@ int main()
 	读取配置文件
 	*/
 	adminList* head_adminList = read_auth_adminList(&adminMaxID);
-	//初始化admin/123456的用户
-	char in_al_un[20] = "admin";
-	char in_al_rn[1000] = "Admin";
-	char in_al_pw[50] = "asdfghjkl;'";
-	//head_adminList = auth_do_addAdmin(head_adminList, in_al_un, in_al_rn, in_al_pw, 1, &adminMaxID, 0);
-	//初始化一条0.1/s的计费标准
-	char in_bsl_n[50] = "默认标准";
-	head_billStdList = billstd_do_addBillStd(head_billStdList, in_bsl_n, 's', 10, &billStdMaxID, nowAdminID);
+	billStdList* head_billStdList = read_billStd_billStdList(&billStdMaxID);
+	cardList* end_cardList = read_card_cardList(&cardMaxID);
+	//卡是倒叙的，所以读完了保存一遍再读能修正顺序问题，再保存一边来保证文件内顺序没问题
+	//有点蛋疼......但是实现起来比直接倒叙链表省事
+	if (save_card_cardList(end_cardList)) end_cardList = read_card_cardList(&cardMaxID);
+	if (save_card_cardList(end_cardList));
+
+
 	/*
 	主程序开始
 	*/
+	system("cls");
 	int userChoose = 0;
 	while (1) {
 		if (auth_checkStatus(head_adminList, nowAdminID) != 0) {

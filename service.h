@@ -9,3 +9,9 @@ void save_showMainMenu(adminList* head_adminList, billStdList* head_billStdList,
 //adminList
 bool save_auth_adminList(adminList* head_adminList);
 adminList* read_auth_adminList(int* adminMaxID);
+//billStdList
+bool save_billStd_billStdList(billStdList* head_billStdList);
+billStdList* read_billStd_billStdList(int* billStdMaxID);
+//cardList
+bool save_card_cardList(cardList* end_cardList);
+cardList* read_card_cardList(int* cardMaxID);
