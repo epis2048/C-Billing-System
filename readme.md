@@ -24,8 +24,8 @@ service 文件保存相关
 
 完成 
 
- - 界面 main, menu, auth, billstd, card
+ - 界面 main, menu, auth, billstd, card, charge
 
- - 存储 auth, billstd, card
+ - 存储 auth, billstd, card, charge
 
-正在 charge
+正在 bill

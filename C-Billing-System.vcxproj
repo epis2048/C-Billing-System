@@ -168,6 +168,7 @@
     <ClInclude Include="billstd.h" />
     <ClInclude Include="card.h" />
     <ClInclude Include="charge.h" />
+    <ClInclude Include="data.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="query.h" />
     <ClInclude Include="service.h" />

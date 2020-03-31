@@ -2,6 +2,7 @@
 #include <ctime>
 using namespace std;
 
+#include "data.h"
 #include "menu.h"
 #include "auth.h"
 #include "billstd.h"
@@ -22,22 +23,26 @@ int main()
 	int adminMaxID = 0;
 	int billStdMaxID = 0;
 	int cardMaxID = 0;
+	int chargeMaxID = 0;
 	/*
 	初始化，逐步改为读取配置文件
 	*/
 	billList* end_billList = NULL;
 	billUnfinishedList* head_billUnfinishedList = NULL;
-	chargeList* end_chargeList = NULL;
 	/*
 	读取配置文件
 	*/
 	adminList* head_adminList = read_auth_adminList(&adminMaxID);
 	billStdList* head_billStdList = read_billStd_billStdList(&billStdMaxID);
-	cardList* end_cardList = read_card_cardList(&cardMaxID);
 	//卡是倒叙的，所以读完了保存一遍再读能修正顺序问题，再保存一边来保证文件内顺序没问题
 	//有点蛋疼......但是实现起来比直接倒叙链表省事
+	cardList* end_cardList = read_card_cardList(&cardMaxID);
 	if (save_card_cardList(end_cardList)) end_cardList = read_card_cardList(&cardMaxID);
 	if (save_card_cardList(end_cardList));
+	//充值记录倒叙也是同理
+	chargeList* end_chargeList = read_charge_chargeList(&chargeMaxID);
+	if (save_charge_chargeList(end_chargeList)) end_chargeList = read_charge_chargeList(&chargeMaxID);
+	if (save_charge_chargeList(end_chargeList));
 
 
 	/*
@@ -54,11 +59,13 @@ int main()
 			case 2:
 				break;
 			case 3:
+				if (auth_checkHasAuth(head_adminList, nowAdminID, 2)) end_chargeList = charge_reCharge(end_chargeList, end_cardList, &chargeMaxID, nowAdminID);
 				break;
 			case 4:
+				if (auth_checkHasAuth(head_adminList, nowAdminID, 2)) end_chargeList = charge_reFund(end_chargeList, end_cardList, &chargeMaxID, nowAdminID);
 				break;
 			case 5:
-				if (auth_checkHasAuth(head_adminList, nowAdminID, 3)) end_cardList = card_showMainMenu(end_cardList, head_billStdList, head_adminList, &cardMaxID, nowAdminID);
+				if (auth_checkHasAuth(head_adminList, nowAdminID, 3)) end_cardList = card_showMainMenu(end_cardList, head_billStdList, end_billList, end_chargeList, head_adminList, &cardMaxID, nowAdminID);
 				system("cls");
 				break;
 			case 6:
@@ -84,6 +91,7 @@ int main()
 				break;
 			}
 			if (userChoose == 0) {
+				save_showMainMenu(head_adminList, head_billStdList, end_cardList, end_billList, head_billUnfinishedList, end_chargeList);
 				system("cls");
 				nowAdminID = 0;
 			}

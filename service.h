@@ -1,9 +1,5 @@
 #pragma once
-#include "auth.h"
-#include "billstd.h"
-#include "card.h"
-#include "bill.h"
-#include "charge.h"
+#include "data.h"
 //Ö÷½çÃæ
 void save_showMainMenu(adminList* head_adminList, billStdList* head_billStdList, cardList* end_cardList, billList* end_billList, billUnfinishedList* head_billUnfinishedList, chargeList* end_chargeList);
 //adminList
@@ -15,3 +11,6 @@ billStdList* read_billStd_billStdList(int* billStdMaxID);
 //cardList
 bool save_card_cardList(cardList* end_cardList);
 cardList* read_card_cardList(int* cardMaxID);
+//chargeList
+bool save_charge_chargeList(chargeList* end_chargeList);
+chargeList* read_charge_chargeList(int* chargeMaxID);

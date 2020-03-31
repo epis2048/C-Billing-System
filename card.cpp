@@ -302,7 +302,60 @@ cardList* card_delCard(cardList* end_cardList, int nowAdminID)
 	return end_cardList;
 }
 
-cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdList, adminList* head_adminList, int* cardMaxID, int nowAdminID)
+void card_query_chargeList(cardList* end_cardList, chargeList* end_chargeList, adminList* head_adminList)
+{
+	system("cls");
+	int cid;
+	bool hasFound = false;
+	cardList* p = end_cardList;
+	cout << "查询卡充值退费记录" << endl;
+	cout << "请输入卡号：";
+	cin >> cid;
+	while (1) {
+		if (p == NULL) break;
+		if (p->id == cid) {
+			hasFound = true;
+			break;
+		}
+		p = p->prev;
+	}
+	if (hasFound) {
+		char cl_s_rct[25];
+		struct tm* ttime;
+		chargeList* q = end_chargeList;
+		char ot[10];
+		system("cls");
+		cout << "卡号：" << p->showID << endl;
+		cout << "当前余额：" << p->balance * 1.0 / 100 << endl;
+		if (p->recentChargeTime < 0) {
+			strcpy(cl_s_rct, "暂无记录");
+		}
+		else {
+			ttime = localtime(&p->recentChargeTime);
+			strftime(cl_s_rct, sizeof(cl_s_rct), "%Y年%m月%d日 %H:%M:%S", ttime);
+		}
+		cout << "最近充值时间：" << cl_s_rct << endl;
+		cout << setw(4) << "ID" << setw(6) << "操作" << setw(10) << "变化量" << setw(12) << "操作者" << setw(26) << "操作时间" << endl;
+		while (1) {
+			if (q == NULL) break;
+			if (q->cardID == p->id) {
+				if (q->chargeType == 1) strcpy(ot, "充值");
+				else strcpy(ot, "退费");
+				ttime = localtime(&q->time);
+				strftime(cl_s_rct, sizeof(cl_s_rct), "%Y年%m月%d日 %H:%M:%S", ttime);
+				cout << setw(4) << q->id << setw(6) << ot << setw(10) << q->charge * 1.0 / 100 << setw(12) << auth_query_getRealnameByID(head_adminList, q->adminID) << setw(26) << cl_s_rct << endl;
+			}
+			q = q->prev;
+		}
+	}
+	else {
+		cout << "未找到该卡！" << endl;
+	}
+	system("pause");
+	system("cls");
+}
+
+cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdList, billList* end_billList, chargeList* end_chargeList, adminList* head_adminList, int* cardMaxID, int nowAdminID)
 {
 	int c = 0;
 	system("cls");
@@ -311,8 +364,10 @@ cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdLis
 		cout << "1. 开卡" << endl;
 		cout << "2. 注销卡" << endl;
 		cout << "3. 查询卡列表" << endl;
-		cout << "4. 查询卡详情" << endl;
-		cout << "5. 修改卡密码/计费标准" << endl;
+		cout << "4. 查询卡消费记录" << endl;
+		cout << "5. 查询卡充值退费记录" << endl;
+		cout << "6. 查询卡详情" << endl;
+		cout << "7. 修改卡密码/计费标准" << endl;
 		cout << "0. 返回" << endl;
 		cout << "请选择：" ;
 		cin >> c;
@@ -327,9 +382,14 @@ cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdLis
 			end_cardList = card_queryCardList(end_cardList, head_billStdList, head_adminList, nowAdminID);
 			break;
 		case 4:
-			end_cardList = card_queryCardDetail(end_cardList, head_billStdList, head_adminList, nowAdminID);
 			break;
 		case 5:
+			card_query_chargeList(end_cardList, end_chargeList, head_adminList);
+			break;
+		case 6:
+			end_cardList = card_queryCardDetail(end_cardList, head_billStdList, head_adminList, nowAdminID);
+			break;
+		case 7:
 			end_cardList = card_editCard(end_cardList, head_billStdList, nowAdminID);
 			break;
 		case 0:
