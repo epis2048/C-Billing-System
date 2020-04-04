@@ -5,6 +5,7 @@
 #include "billstd.h"
 #include "auth.h"
 #include "card.h"
+#include "bill.h"
 
 cardList* card_do_addCard(cardList* end_cardList, char password[50], int balance, int billStd, int* cardMaxID, int nowAdminID)
 {
@@ -46,15 +47,25 @@ cardList* card_do_addCard(cardList* end_cardList, char password[50], int balance
 	return end_cardList;
 }
 
-cardList* card_do_delCard(cardList* end_cardList, int cid, int nowAdminID) {
+cardList* card_do_delCard(cardList* end_cardList, billUnfinishedList* head_billUnfinishedList, int cid, int nowAdminID) {
 	bool hasFound = false;
 	cardList* p = end_cardList;
 	while (1) {
 		if (p == NULL) break;
 		if (p->id == cid) {
-			hasFound = true;
-			p->isDel = true;
-			break;
+			if (bill_query_isUp(head_billUnfinishedList, cid)) {
+				cout << "该卡正在上机！请先下机后再注销！" << endl;
+				return end_cardList;
+			}
+			else if (p->balance != 0) {
+				cout << "该卡仍有余额或欠费！请结清帐后注销！" << endl;
+				return end_cardList;
+			}
+			else{
+				hasFound = true;
+				p->isDel = true;
+				break;
+			}
 		}
 		p = p->prev;
 	}
@@ -290,13 +301,13 @@ cardList* card_editCard(cardList* end_cardList, billStdList* head_billStdList, i
 	return end_cardList;
 }
 
-cardList* card_delCard(cardList* end_cardList, int nowAdminID)
+cardList* card_delCard(cardList* end_cardList, billUnfinishedList* head_billUnfinishedList, int nowAdminID) 
 {
 	int cid;
 	system("cls");
 	cout << "请输入要注销的卡号：";
 	cin >> cid;
-	end_cardList = card_do_delCard(end_cardList, cid, nowAdminID);
+	end_cardList = card_do_delCard(end_cardList, head_billUnfinishedList,  cid, nowAdminID);
 	system("pause");
 	system("cls");
 	return end_cardList;
@@ -355,7 +366,7 @@ void card_query_chargeList(cardList* end_cardList, chargeList* end_chargeList, a
 	system("cls");
 }
 
-cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdList, billList* end_billList, chargeList* end_chargeList, adminList* head_adminList, int* cardMaxID, int nowAdminID)
+cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdList, billList* end_billList, chargeList* end_chargeList, billUnfinishedList* head_billUnfinishedList, adminList* head_adminList, int* cardMaxID, int nowAdminID)
 {
 	int c = 0;
 	system("cls");
@@ -376,7 +387,7 @@ cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdLis
 			end_cardList = card_addCard(end_cardList, head_billStdList, cardMaxID, nowAdminID);
 			break;
 		case 2:
-			end_cardList = card_delCard(end_cardList, nowAdminID);
+			end_cardList = card_delCard(end_cardList, head_billUnfinishedList, nowAdminID);
 			break;
 		case 3:
 			end_cardList = card_queryCardList(end_cardList, head_billStdList, head_adminList, nowAdminID);

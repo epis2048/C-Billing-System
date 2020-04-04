@@ -39,6 +39,11 @@ chargeList* charge_reCharge(chargeList* end_chargeList, cardList* end_cardList, 
 	p->recentChargeTime = t;
 	chargeList* q;
 	q = (chargeList*)malloc(sizeof(chargeList));//申请内存
+	if (q == NULL) {
+		cout << "充值失败！" << endl;
+		system("pause");
+		return end_chargeList;
+	}
 	(*chargeMaxID)++;
 	q->id = *chargeMaxID;
 	q->cardID = p->id;
@@ -61,6 +66,7 @@ chargeList* charge_reFund(chargeList* end_chargeList, cardList* end_cardList, in
 	int ccid;
 	cardList* p = end_cardList;
 	bool hasFoundCard = false;
+	char inpw[50];
 	system("cls");
 	cout << "退费" << endl;
 	cout << "请输入要退费的卡号：";
@@ -68,7 +74,17 @@ chargeList* charge_reFund(chargeList* end_chargeList, cardList* end_cardList, in
 	while (1) {
 		if (p == NULL) break;
 		if (p->id == ccid) {
-			hasFoundCard = true;
+			cout << "请输入卡密码：";
+			cin >> inpw;
+			if (strcmp(inpw, p->password) == 0) {
+				hasFoundCard = true;
+			}
+			else {
+				cout << "密码错误！";
+				system("pause");
+				system("cls");
+				return end_chargeList;
+			}
 			break;
 		}
 		p = p->prev;
@@ -79,6 +95,7 @@ chargeList* charge_reFund(chargeList* end_chargeList, cardList* end_cardList, in
 		system("cls");
 		return end_chargeList;
 	}
+	system("cls");
 	int c;
 	float cc;
 	cout << "卡号：" << p->showID << endl;
@@ -88,6 +105,8 @@ chargeList* charge_reFund(chargeList* end_chargeList, cardList* end_cardList, in
 	c = (int)(cc * 100);
 	if ((p->balance - c) < 0) {
 		cout << "卡里钱不够！" << endl;
+		system("pause");
+		system("cls");
 		return end_chargeList;
 	}
 	(p->balance) -= c;
@@ -95,6 +114,11 @@ chargeList* charge_reFund(chargeList* end_chargeList, cardList* end_cardList, in
 	//p->recentChargeTime = t;//退费后不改变最近充值时间
 	chargeList* q;
 	q = (chargeList*)malloc(sizeof(chargeList));//申请内存
+	if (q == NULL) {
+		cout << "退费失败！" << endl;
+		system("pause");
+		return end_chargeList;
+	}
 	(*chargeMaxID)++;
 	q->id = *chargeMaxID;
 	q->cardID = p->id;

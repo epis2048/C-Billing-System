@@ -14,3 +14,6 @@ cardList* read_card_cardList(int* cardMaxID);
 //chargeList
 bool save_charge_chargeList(chargeList* end_chargeList);
 chargeList* read_charge_chargeList(int* chargeMaxID);
+//billUnfinishedList
+bool save_bill_billUnfinishedList(billUnfinishedList* head_billUnfinishedList);
+billUnfinishedList* read_bill_billUnfinishedList();

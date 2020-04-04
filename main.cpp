@@ -28,12 +28,12 @@ int main()
 	初始化，逐步改为读取配置文件
 	*/
 	billList* end_billList = NULL;
-	billUnfinishedList* head_billUnfinishedList = NULL;
 	/*
 	读取配置文件
 	*/
 	adminList* head_adminList = read_auth_adminList(&adminMaxID);
 	billStdList* head_billStdList = read_billStd_billStdList(&billStdMaxID);
+	billUnfinishedList* head_billUnfinishedList = read_bill_billUnfinishedList();
 	//卡是倒叙的，所以读完了保存一遍再读能修正顺序问题，再保存一边来保证文件内顺序没问题
 	//有点蛋疼......但是实现起来比直接倒叙链表省事
 	cardList* end_cardList = read_card_cardList(&cardMaxID);
@@ -55,6 +55,7 @@ int main()
 			userChoose = showMenu(head_adminList, nowAdminID);
 			switch (userChoose){
 			case 1:
+				if (auth_checkHasAuth(head_adminList, nowAdminID, 1)) head_billUnfinishedList = bill_up(head_billUnfinishedList, end_cardList, nowAdminID);
 				break;
 			case 2:
 				break;
@@ -65,7 +66,7 @@ int main()
 				if (auth_checkHasAuth(head_adminList, nowAdminID, 2)) end_chargeList = charge_reFund(end_chargeList, end_cardList, &chargeMaxID, nowAdminID);
 				break;
 			case 5:
-				if (auth_checkHasAuth(head_adminList, nowAdminID, 3)) end_cardList = card_showMainMenu(end_cardList, head_billStdList, end_billList, end_chargeList, head_adminList, &cardMaxID, nowAdminID);
+				if (auth_checkHasAuth(head_adminList, nowAdminID, 3)) end_cardList = card_showMainMenu(end_cardList, head_billStdList, end_billList, end_chargeList, head_billUnfinishedList, head_adminList, &cardMaxID, nowAdminID);
 				system("cls");
 				break;
 			case 6:
