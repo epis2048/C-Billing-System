@@ -17,3 +17,6 @@ chargeList* read_charge_chargeList(int* chargeMaxID);
 //billUnfinishedList
 bool save_bill_billUnfinishedList(billUnfinishedList* head_billUnfinishedList);
 billUnfinishedList* read_bill_billUnfinishedList();
+//billList
+bool save_bill_billList(billList* end_billList);
+billList* read_bill_billList(int* billMaxID);

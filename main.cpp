@@ -24,10 +24,7 @@ int main()
 	int billStdMaxID = 0;
 	int cardMaxID = 0;
 	int chargeMaxID = 0;
-	/*
-	初始化，逐步改为读取配置文件
-	*/
-	billList* end_billList = NULL;
+	int billMaxID = 0;
 	/*
 	读取配置文件
 	*/
@@ -43,6 +40,10 @@ int main()
 	chargeList* end_chargeList = read_charge_chargeList(&chargeMaxID);
 	if (save_charge_chargeList(end_chargeList)) end_chargeList = read_charge_chargeList(&chargeMaxID);
 	if (save_charge_chargeList(end_chargeList));
+	//账单记录倒叙也是同理
+	billList* end_billList = read_bill_billList(&billMaxID);
+	if (save_bill_billList (end_billList)) end_billList = read_bill_billList(&billMaxID);
+	if (save_bill_billList(end_billList));
 
 
 	/*
@@ -58,6 +59,7 @@ int main()
 				if (auth_checkHasAuth(head_adminList, nowAdminID, 1)) head_billUnfinishedList = bill_up(head_billUnfinishedList, end_cardList, nowAdminID);
 				break;
 			case 2:
+				if (auth_checkHasAuth(head_adminList, nowAdminID, 1)) end_billList = bill_down(end_billList, &head_billUnfinishedList, end_cardList, head_billStdList, nowAdminID, &billMaxID);
 				break;
 			case 3:
 				if (auth_checkHasAuth(head_adminList, nowAdminID, 2)) end_chargeList = charge_reCharge(end_chargeList, end_cardList, &chargeMaxID, nowAdminID);
@@ -74,6 +76,8 @@ int main()
 				system("cls"); 
 				break;
 			case 7:
+				if (auth_checkHasAuth(head_adminList, nowAdminID, 5)) query_showMainMenu(head_adminList, head_billStdList, end_cardList, end_billList, head_billUnfinishedList, end_chargeList);
+				system("cls");
 				break;
 			case 8:
 				if (auth_checkHasAuth(head_adminList, nowAdminID, 0)) head_adminList = auth_showMainMenu(head_adminList, &adminMaxID, nowAdminID);

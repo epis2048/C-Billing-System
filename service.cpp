@@ -8,6 +8,7 @@ constexpr auto File_billStdList = "data/billStdList.dat";
 constexpr auto File_cardList = "data/cardList.dat";
 constexpr auto File_chargeList = "data/chargeList.dat";
 constexpr auto File_billUnfinishedList = "data/billUnfList.dat";
+constexpr auto File_billList = "data/billList.dat";
 using namespace std;
 
 adminList* read_auth_adminList(int* adminMaxID)
@@ -303,6 +304,67 @@ billUnfinishedList* read_bill_billUnfinishedList()
 	return head_billUnfinishedList;
 }
 
+billList* read_bill_billList(int* billMaxID)
+{
+	billList* end_billList = NULL;
+	billList* p;
+	int id;//ID，实现自增
+	int stdID;//计费标准ID
+	char stdUnit;//计费单位(秒：s、分：m、时：h)
+	int stdUnitCost;//每单位多少钱, 单位是分，1元是100
+	int cardID;//卡号
+	int cost;//花费了多少钱，单位是分，一元100
+	int upAdminID;//上机管理员ID
+	time_t upTime;//上机时间
+	int downAdminID;//下机管理员ID
+	time_t downTime;//下机时间
+	//读取数据
+	FILE* fp;
+	if ((fp = fopen(File_billList, "r")) == NULL) {
+		cout << "初始化失败！" << endl;
+		system("pause");
+		return NULL;
+	}
+	while (1) {
+		//读取
+		fscanf(fp, "%d", &id);
+		if (id < 0) break;
+		if (id > * (billMaxID))* (billMaxID) = id;
+		fscanf(fp, "%d", &stdID);
+		fscanf(fp, "%c", &stdUnit);//预防不吃回车
+		fscanf(fp, "%c", &stdUnit);
+		fscanf(fp, "%d", &stdUnitCost);
+		fscanf(fp, "%d", &cardID);
+		fscanf(fp, "%d", &cost);
+		fscanf(fp, "%d", &upAdminID);
+		fscanf(fp, "%lld", &upTime);
+		fscanf(fp, "%d", &downAdminID);
+		fscanf(fp, "%lld", &downTime);
+		//存链表
+		p = (billList*)malloc(sizeof(billList));//申请内存
+		if (p == NULL) {
+			cout << "初始化失败！" << endl;
+			system("pause");
+			return NULL;
+		}
+		p->id = id;
+		p->stdID = stdID;
+		p->stdUnit = stdUnit;
+		p->stdUnitCost = stdUnitCost;
+		p->cardID = cardID;
+		p->cost = cost;
+		p->upAdminID = upAdminID;
+		p->upTime = upTime;
+		p->downAdminID = downAdminID;
+		p->downTime = downTime;
+		//链表里插数据
+		p->prev = end_billList;
+		end_billList = p;
+	}
+	fclose(fp);
+	return end_billList;
+}
+
 bool save_auth_adminList(adminList* head_adminList) {
 	adminList* p = head_adminList;
 	FILE* fp;
@@ -417,6 +479,32 @@ bool save_bill_billUnfinishedList(billUnfinishedList* head_billUnfinishedList)
 	return true;
 }
 
+bool save_bill_billList(billList* end_billList)
+{
+	billList* p = end_billList;
+	FILE* fp;
+	if ((fp = fopen(File_billList, "w+")) == NULL) {
+		return false;
+	}
+	while (1) {
+		if (p == NULL) break;
+		fprintf(fp, "%d\n", p->id);
+		fprintf(fp, "%d\n", p->stdID);
+		fprintf(fp, "%c\n", p->stdUnit);
+		fprintf(fp, "%d\n", p->stdUnit);
+		fprintf(fp, "%d\n", p->cardID);
+		fprintf(fp, "%d\n", p->cost);
+		fprintf(fp, "%d\n", p->upAdminID);
+		fprintf(fp, "%lld\n", p->upTime);
+		fprintf(fp, "%d\n", p->downAdminID);
+		fprintf(fp, "%lld\n", p->downTime);
+		p = p->prev;
+	}
+	fprintf(fp, "-1\n");
+	fclose(fp);
+	return true;
+}
+
 void save_showMainMenu(adminList* head_adminList, billStdList* head_billStdList, cardList* end_cardList, billList* end_billList, billUnfinishedList* head_billUnfinishedList, chargeList* end_chargeList)
 {
 	system("cls");
@@ -440,6 +528,10 @@ void save_showMainMenu(adminList* head_adminList, billStdList* head_billStdList,
 	//billUnfinishedList
 	cout << "保存billUnfinishedList...";
 	if (save_bill_billUnfinishedList(head_billUnfinishedList)) cout << " 成功！" << endl;
+	else cout << " 失败！" << endl;
+	//billList
+	cout << "保存billList...";
+	if (save_bill_billList(end_billList)) cout << " 成功！" << endl;
 	else cout << " 失败！" << endl;
 	//Finish
 	cout << "保存完成！" << endl;

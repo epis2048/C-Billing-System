@@ -366,6 +366,48 @@ void card_query_chargeList(cardList* end_cardList, chargeList* end_chargeList, a
 	system("cls");
 }
 
+void card_query_billList(cardList* end_cardList, billList* end_billList, billStdList* head_billStdList, adminList* head_adminList)
+{
+	system("cls");
+	int cid;
+	bool hasFound = false;
+	cardList* p = end_cardList;
+	cout << "查询卡上下机记录" << endl;
+	cout << "请输入卡号：";
+	cin >> cid;
+	while (1) {
+		if (p == NULL) break;
+		if (p->id == cid) {
+			hasFound = true;
+			break;
+		}
+		p = p->prev;
+	}
+	if (hasFound) {
+		billList* p = end_billList;
+		char c_qbl_ut[25];
+		char c_qbl_dt[25];
+		struct tm* ttime;
+		cout << setw(20) << "计费标准" << setw(6) << "花费" << setw(26) << "上机时间" << setw(12) << "上机操作者" << setw(26) << "下机时间" << setw(12) << "下机操作者" << endl;
+		while (1) {
+			if (p == NULL) break;
+			if (p->cardID == cid) {
+				ttime = localtime(&p->upTime);
+				strftime(c_qbl_ut, sizeof(c_qbl_ut), "%Y年%m月%d日 %H:%M:%S", ttime);
+				ttime = localtime(&p->downTime);
+				strftime(c_qbl_dt, sizeof(c_qbl_dt), "%Y年%m月%d日 %H:%M:%S", ttime);
+				cout << setw(20) << billstd_query_nameAndStd(head_billStdList, p->stdID) << setw(6) << p->cost * 1.0 / 100 << setw(26) << c_qbl_ut << setw(12) << auth_query_getRealnameByID(head_adminList, p->upAdminID) << setw(26) << c_qbl_dt << setw(12) << auth_query_getRealnameByID(head_adminList, p->downAdminID) << endl;
+			}
+			p = p->prev;
+		}
+	}
+	else {
+		cout << "未找到该卡！" << endl;
+	}
+	system("pause");
+	system("cls");
+}
+
 cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdList, billList* end_billList, chargeList* end_chargeList, billUnfinishedList* head_billUnfinishedList, adminList* head_adminList, int* cardMaxID, int nowAdminID)
 {
 	int c = 0;
@@ -393,6 +435,7 @@ cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdLis
 			end_cardList = card_queryCardList(end_cardList, head_billStdList, head_adminList, nowAdminID);
 			break;
 		case 4:
+			card_query_billList(end_cardList, end_billList, head_billStdList, head_adminList);
 			break;
 		case 5:
 			card_query_chargeList(end_cardList, end_chargeList, head_adminList);

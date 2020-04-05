@@ -17,4 +17,4 @@ cardList* card_do_delCard(cardList* end_cardList, billUnfinishedList* head_billU
 cardList* card_delCard(cardList* end_cardList, billUnfinishedList* head_billUnfinishedList, int nowAdminID);
 //²éÑ¯¿¨¼ÇÂ¼
 void card_query_chargeList(cardList* end_cardList, chargeList* end_chargeList, adminList* head_adminList);
-void card_query_billList(cardList* end_cardList, billList* end_billList);
+void card_query_billList(cardList* end_cardList, billList* end_billList, billStdList* head_billStdList, adminList* head_adminList);
