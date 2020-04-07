@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <string>
 #include <conio.h>
 #include "query.h"
 #include "billstd.h"
@@ -121,15 +122,86 @@ void query_recentData(adminList* head_adminList, billStdList* head_billStdList, 
 	ttime = localtime(&tnow);
 	strftime(qcd_t_et, sizeof(qcd_t_et), "%Y年%m月%d日 %H:%M:%S", ttime);
 	cout << "开始时间：" << qcd_t_st << endl << "结束时间：" << qcd_t_et << endl;
-	int count_charge = 0;
-	int count_bill = 0;
-	int count_balance = 0;
-	//统计count_charge
+	int count_charge = 0;//充值总钱数
+	int count_fund = 0;//退款总钱数
+	int count_chargeTime = 0;//充值次数
+	int count_billTime = 0;//消费次数
+	int count_bill = 0;//消费总钱数
+	int count_system_balanceNow = 0;//系统内所有卡总余额
+	int count_system_admin = 0;//系统内管理员数量
+	int count_system_cardValid = 0;//系统内有效卡数量
+	int count_system_card = 0;//系统内所有卡数量
+	int count_system_bill = 0;//系统内消费记录的数量
+	int count_system_billStdValid = 0;//系统内有效计费标准数量
+	int count_system_billStd = 0;//系统内所有计费标准数量
+	int count_system_charge = 0;//系统内充值记录的数量
 
-	//统计count_bill
+	//统计count_billTime, count_chargeTime, count_balanceNow, count_system_card, count_system_cardValid
+	cardList* cl = end_cardList;
+	while (1) {
+		if (cl == NULL)break;
+		if (cl->recentBillTime >= tstart) count_billTime++;
+		if (cl->recentChargeTime >= tstart) count_chargeTime++;
+		count_system_balanceNow += cl->balance;
+		count_system_card++;
+		if (cl->isDel == false) count_system_cardValid++;
+		cl = cl->prev;
+	}
 
-	//统计count_balance
+	//统计count_charge, count_system_charge
+	chargeList* cll = end_chargeList;
+	while (1) {
+		if (cll == NULL)break;
+		if (cll->time >= tstart && cll->chargeType == 1) count_charge += cll->charge;
+		if (cll->time >= tstart && cll->chargeType == 2) count_fund += cll->charge;
+		count_system_charge++;
+		cll = cll->prev;
+	}
 
+	//统计count_bill, count_system_bill
+	billList* bl = end_billList;
+	while (1) {
+		if (bl == NULL)break;
+		if (bl->downTime >= tstart) count_bill += bl->cost;
+		count_system_bill++;
+		bl = bl->prev;
+	}
+
+	//统计count_system_admin
+	adminList* al = head_adminList;
+	while (1) {
+		if (al == NULL) break;
+		count_system_admin++;
+		al = al->next;
+	}
+
+	//统计count_system_billStdValid, count_system_billStd
+	billStdList* bsl = head_billStdList;
+	while (1) {
+		if (bsl == NULL)break;
+		count_system_billStd++;
+		if (bsl->isDel == false) count_system_billStdValid++;
+		bsl = bsl->next;
+	}
+
+	cout << endl;
+	cout << setw(26) << "Name" << setw(8) << "Value" << endl;
+	cout << setw(26) << "最近" + to_string(cd) + "天消费人数" << setw(8) << count_billTime << endl;
+	cout << setw(26) << "最近" + to_string(cd) + "天消费总钱数" << setw(8) << count_bill * 1.0 / 100 << endl;
+	cout << setw(26) << "最近" + to_string(cd) + "天充值人数" << setw(8) << count_chargeTime << endl;
+	cout << setw(26) << "最近" + to_string(cd) + "天充值总钱数" << setw(8) << count_charge * 1.0 / 100 << endl;
+	cout << setw(26) << "最近" + to_string(cd) + "天退费总钱数" << setw(8) << count_fund * 1.0 / 100 << endl;
+	cout << "----------------------------------" << endl;
+	cout << setw(26) << "系统内所有卡总余额" << setw(8) << count_system_balanceNow * 1.0 / 100 << endl;
+	cout << setw(26) << "系统内有效卡数量" << setw(8) << count_system_cardValid << endl;
+	cout << setw(26) << "系统内所有卡数量" << setw(8) << count_system_card << endl;
+	cout << setw(26) << "系统内消费记录的数量" << setw(8) << count_system_bill << endl;
+	cout << setw(26) << "系统内充值记录的数量" << setw(8) << count_system_charge << endl;
+	cout << setw(26) << "系统内管理员数量" << setw(8) << count_system_admin << endl;
+	cout << setw(26) << "系统内有效计费标准数量" << setw(8) << count_system_billStdValid << endl;
+	cout << setw(26) << "系统内所有计费标准数量" << setw(8) << count_system_billStd << endl;
+
+	cout << endl;
 	system("pause");
 }
 

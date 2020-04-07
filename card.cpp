@@ -134,7 +134,7 @@ cardList* card_addCard(cardList* end_cardList, billStdList* head_billStdList, in
 	return end_cardList;
 }
 
-cardList* card_queryCardList(cardList* end_cardList, billStdList* head_billStdList, adminList* head_adminList, int nowAdminID)
+cardList* card_queryCardList(cardList* end_cardList, billStdList* head_billStdList, adminList* head_adminList, billUnfinishedList* head_billUnfinishedList, int nowAdminID)
 {
 	system("cls");
 	cardList* p = end_cardList;
@@ -142,7 +142,7 @@ cardList* card_queryCardList(cardList* end_cardList, billStdList* head_billStdLi
 	char c_s_t[25];
 	struct tm* ttime;
 	cout << "卡列表：" << endl;
-	cout << setw(6) << "卡号" << setw(6) << "余额" << setw(26) << "计费标准" << setw(26) << "最近使用时间" << endl;
+	cout << setw(6) << "卡号" << setw(6) << "余额" << setw(26) << "计费标准" << setw(26) << "最近使用时间" << setw(12) << "当前是否上机" << endl;
 	while (1) {
 		if (p == NULL) break;
 		if (p->isDel) { 
@@ -157,7 +157,14 @@ cardList* card_queryCardList(cardList* end_cardList, billStdList* head_billStdLi
 			strftime(c_s_t, sizeof(c_s_t), "%Y年%m月%d日 %H:%M:%S", ttime);
 		}
 		str_billStd = billstd_query_nameAndStd(head_billStdList, p->billStd);
-		cout << setw(6) << p->showID << setw(6) << p->balance*1.0/100 << setw(26) << str_billStd << setw(26) << c_s_t << endl;
+		string s;
+		if (bill_query_isUp(head_billUnfinishedList, p->id)) {
+			s = "是";
+		}
+		else {
+			s = "否";
+		}
+		cout << setw(6) << p->showID << setw(6) << p->balance * 1.0 / 100 << setw(26) << str_billStd << setw(26) << c_s_t << setw(12) << s << endl;
 		p = p->prev;
 	}
 	system("pause");
@@ -165,7 +172,7 @@ cardList* card_queryCardList(cardList* end_cardList, billStdList* head_billStdLi
 	return end_cardList;
 }
 
-cardList* card_queryCardDetail(cardList* end_cardList, billStdList* head_billStdList, adminList* head_adminList, int nowAdminID)
+cardList* card_queryCardDetail(cardList* end_cardList, billStdList* head_billStdList, adminList* head_adminList, billUnfinishedList* head_billUnfinishedList, int nowAdminID)
 {
 	cardList* p = end_cardList;
 	int cid;
@@ -190,6 +197,14 @@ cardList* card_queryCardDetail(cardList* end_cardList, billStdList* head_billStd
 		cout << setw(12) << "Name" << setw(26) << "Value" << endl;
 		cout << setw(12) << "ID" << setw(26) << p->showID << endl;
 		cout << setw(12) << "余额" << setw(26) << p->balance*1.0/100 << endl;
+		string s;
+		if (bill_query_isUp(head_billUnfinishedList, p->id)) {
+			s = "是";
+		}
+		else {
+			s = "否";
+		}
+		cout << setw(12) << "当前是否上机" << setw(26) << s << endl;
 		cout << setw(12) << "计费标准" << setw(26) << billstd_query_nameAndStd(head_billStdList, p->billStd )<< endl;
 		cout << setw(12) << "累计消费次数" << setw(26) << p->totalChargeTime << endl;
 		cout << setw(12) << "累计消费金额" << setw(26) << p->totalCharge << endl;
@@ -313,7 +328,7 @@ cardList* card_delCard(cardList* end_cardList, billUnfinishedList* head_billUnfi
 	return end_cardList;
 }
 
-void card_query_chargeList(cardList* end_cardList, chargeList* end_chargeList, adminList* head_adminList)
+void card_queryChargeList(cardList* end_cardList, chargeList* end_chargeList, adminList* head_adminList)
 {
 	system("cls");
 	int cid;
@@ -366,7 +381,7 @@ void card_query_chargeList(cardList* end_cardList, chargeList* end_chargeList, a
 	system("cls");
 }
 
-void card_query_billList(cardList* end_cardList, billList* end_billList, billStdList* head_billStdList, adminList* head_adminList)
+void card_queryBillList(cardList* end_cardList, billList* end_billList, billStdList* head_billStdList, adminList* head_adminList, billUnfinishedList* head_billUnfinishedList)
 {
 	system("cls");
 	int cid;
@@ -388,6 +403,24 @@ void card_query_billList(cardList* end_cardList, billList* end_billList, billStd
 		char c_qbl_ut[25];
 		char c_qbl_dt[25];
 		struct tm* ttime;
+		bool isUp = false;
+		billUnfinishedList* q = head_billUnfinishedList;
+		while (1) {
+			if (q == NULL) break;
+			if (q->cardID == cid) {
+				isUp = true;
+				break;
+			}
+			q = q->next;
+		}
+		if (isUp) {
+			cout << "该卡正在上机" << endl;
+			ttime = localtime(&q->upTime);
+			strftime(c_qbl_ut, sizeof(c_qbl_ut), "%Y年%m月%d日 %H:%M:%S", ttime);
+			cout << "上机时间：" << c_qbl_ut << endl;
+			cout << "计费标准：" << billstd_query_nameAndStd(head_billStdList, q->stdID) << endl;
+		}
+		cout << "消费记录：" << endl;
 		cout << setw(20) << "计费标准" << setw(6) << "花费" << setw(26) << "上机时间" << setw(12) << "上机操作者" << setw(26) << "下机时间" << setw(12) << "下机操作者" << endl;
 		while (1) {
 			if (p == NULL) break;
@@ -432,16 +465,16 @@ cardList* card_showMainMenu(cardList* end_cardList, billStdList* head_billStdLis
 			end_cardList = card_delCard(end_cardList, head_billUnfinishedList, nowAdminID);
 			break;
 		case 3:
-			end_cardList = card_queryCardList(end_cardList, head_billStdList, head_adminList, nowAdminID);
+			end_cardList = card_queryCardList(end_cardList, head_billStdList, head_adminList, head_billUnfinishedList, nowAdminID);
 			break;
 		case 4:
-			card_query_billList(end_cardList, end_billList, head_billStdList, head_adminList);
+			card_queryBillList(end_cardList, end_billList, head_billStdList, head_adminList, head_billUnfinishedList);
 			break;
 		case 5:
-			card_query_chargeList(end_cardList, end_chargeList, head_adminList);
+			card_queryChargeList(end_cardList, end_chargeList, head_adminList);
 			break;
 		case 6:
-			end_cardList = card_queryCardDetail(end_cardList, head_billStdList, head_adminList, nowAdminID);
+			end_cardList = card_queryCardDetail(end_cardList, head_billStdList, head_adminList, head_billUnfinishedList, nowAdminID);
 			break;
 		case 7:
 			end_cardList = card_editCard(end_cardList, head_billStdList, nowAdminID);
