@@ -157,6 +157,7 @@
     <ClCompile Include="billstd.cpp" />
     <ClCompile Include="card.cpp" />
     <ClCompile Include="charge.cpp" />
+    <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="query.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="card.h" />
     <ClInclude Include="charge.h" />
     <ClInclude Include="data.h" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="query.h" />
     <ClInclude Include="service.h" />

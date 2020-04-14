@@ -2,8 +2,10 @@
 #include <iostream>
 #include <ctime>
 #include <iomanip>
+#include <string>
 #include <conio.h>
 #include "auth.h"
+#include "log.h"
 using namespace std;
 
 int auth_checkStatus(adminList* head_adminList, int nowAdminID) {
@@ -47,6 +49,11 @@ int auth_login(adminList* head_adminList)
 		if ((strcmp(p->username, username) == 0) && (strcmp(p->password, password) == 0)) {
 			nowAdminID = p->id;
 			cout << "欢迎登录，" << p->realname << endl;
+			//存LOG
+			string s;
+			s = p->username;
+			s = "管理员登录：" + s;
+			log_save(s);
 			if (p->recentLoginTime < 0) {
 				strcpy(al_s_t, "暂无");
 			}
@@ -101,6 +108,11 @@ adminList* auth_do_addAdmin(adminList* head_adminList, char username[20], char r
 		}
 		q->next = p;
 	}
+	//存LOG
+	string s;
+	s = p->username;
+	s = "添加管理员：" + s + " / " + to_string(nowAdminID);
+	log_save(s);
 	return head_adminList;
 }
 
@@ -113,6 +125,9 @@ adminList* auth_do_delAdmin(adminList* head_adminList, int delID, int nowAdminID
 	adminList* p = head_adminList;
 	adminList* q = NULL;
 	if (head_adminList->id == delID) {//如果第一项就是那删除第一项
+		string s = head_adminList->username;
+		s = "删除管理员：" + s + " / " + to_string(nowAdminID);
+		log_save(s);
 		q = head_adminList;
 		head_adminList = head_adminList->next;
 		free(q);
@@ -121,6 +136,9 @@ adminList* auth_do_delAdmin(adminList* head_adminList, int delID, int nowAdminID
 		while (1) {//如果不是，从第二项开始循环判断,初始指针为第一项
 			if (p->next == NULL) break;
 			if (p->next->id == delID) {//如果他的下一项要被删除，就直接删除它
+				string s = p->next->username;
+				s = "删除管理员：" + s + " / " + to_string(nowAdminID);
+				log_save(s);
 				q = p->next;
 				p->next = p->next->next;
 				free(q);
@@ -129,6 +147,7 @@ adminList* auth_do_delAdmin(adminList* head_adminList, int delID, int nowAdminID
 			p = p->next;
 		}
 	}
+	
 	return head_adminList;
 }
 
@@ -236,6 +255,7 @@ adminList* auth_editAdmin(adminList* head_adminList, int nowAdminID)
 				if (strcmp(e_pw, e_pw2) == 0) {
 					strcpy(p->password, e_pw);
 					cout << "编辑成功！" << endl;
+
 				}
 				else cout << "修改失败！两次密码不一致" << endl;
 				system("pause");

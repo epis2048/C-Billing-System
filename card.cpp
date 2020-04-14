@@ -207,7 +207,7 @@ cardList* card_queryCardDetail(cardList* end_cardList, billStdList* head_billStd
 		cout << setw(12) << "当前是否上机" << setw(26) << s << endl;
 		cout << setw(12) << "计费标准" << setw(26) << billstd_query_nameAndStd(head_billStdList, p->billStd )<< endl;
 		cout << setw(12) << "累计消费次数" << setw(26) << p->totalChargeTime << endl;
-		cout << setw(12) << "累计消费金额" << setw(26) << p->totalCharge << endl;
+		cout << setw(12) << "累计消费金额" << setw(26) << p->totalCharge * 1.0 / 100 << endl;
 		if (p->recentBillTime < 0) strcpy(c_qcd_ta, "暂无");
 		else {
 			ttime = localtime(&p->recentBillTime);

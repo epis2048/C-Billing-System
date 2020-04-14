@@ -3,6 +3,7 @@
 using namespace std;
 
 #include "data.h"
+#include "log.h"
 #include "menu.h"
 #include "auth.h"
 #include "billstd.h"

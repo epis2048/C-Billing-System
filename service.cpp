@@ -27,7 +27,9 @@ adminList* read_auth_adminList(int* adminMaxID)
 	FILE* fp;
 	int i;
 	if ((fp = fopen(File_adminList, "r")) == NULL) {
-		return false;
+		cout << "³õÊ¼»¯Ê§°Ü£¡" << endl;
+		system("pause");
+		return NULL;
 	}
 	while (1) {
 		//¶ÁÈ¡
